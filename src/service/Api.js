@@ -19,3 +19,15 @@ export const getInfoFilm = async id => {
 
   return data;
 };
+
+export const getCast = async id => {
+  const { data } = await axios(`movie/${id}/credits`);
+
+  return data;
+};
+
+export const geReviews = async id => {
+  const { data } = await axios(`movie/${id}/reviews`);
+
+  return data;
+};

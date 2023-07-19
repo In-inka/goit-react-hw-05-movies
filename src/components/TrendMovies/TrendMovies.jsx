@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import * as Api from '../../service/Api.js';
-import { NavLink } from 'react-router-dom';
+
+import { Item, Link } from '../TrendMovies/TrendMovies.styled.jsx';
 const TrendMovies = () => {
   const [trendMovies, setTrendMovies] = useState([]);
 
@@ -17,11 +18,9 @@ const TrendMovies = () => {
   return (
     <ul>
       {trendMovies.map(({ id, original_title, original_name }) => (
-        <li key={id}>
-          <NavLink to={`/movies/${id}`}>
-            {original_title || original_name}
-          </NavLink>
-        </li>
+        <Item key={id}>
+          <Link to={`/movies/${id}`}>{original_title || original_name}</Link>
+        </Item>
       ))}
     </ul>
   );
