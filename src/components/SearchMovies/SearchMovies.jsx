@@ -11,34 +11,45 @@ import {
 } from './SearchMovies.styled';
 import { useEffect, useState } from 'react';
 import * as Api from '../../service/Api.js';
+import { useSearchParams } from 'react-router-dom';
+import { Toaster, toast } from 'react-hot-toast';
 
 const SearchMovies = () => {
-  const [nameFilm, setNameFilm] = useState('');
   const [filmList, setFilmList] = useState([]);
+  const [error, setError] = useState('');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const query = searchParams.get('query') ?? '';
 
   const formik = useFormik({
     initialValues: {
-      name: '',
+      name: query,
     },
-    onSubmit: ({ name }, { resetForm }) => {
-      setNameFilm(name);
-      resetForm();
+    onSubmit: ({ name }) => {
+      if (name === ' ') {
+        return setSearchParams({});
+      }
+      setSearchParams({ query: name });
     },
   });
 
   useEffect(() => {
-    Api.geSearchMovies(nameFilm)
+    if (query === '') {
+      toast.error('Please enter the name of the movie');
+      return;
+    }
+    Api.geSearchMovies(query)
       .then(({ results }) => {
         setFilmList([...results]);
       })
-      .catch(err => {
-        console.log(err);
+      .catch(error => {
+        setError(error);
       });
-  }, [nameFilm]);
+  }, [query]);
 
   return (
     <>
       <Container>
+        <Toaster position="top-center" reverseOrder={false} />
         <SearchForm htmlFor="name" onSubmit={formik.handleSubmit}>
           <Btn type="submit">
             <Label>Search</Label>
@@ -47,7 +58,7 @@ const SearchMovies = () => {
             type="text"
             autoComplete="off"
             autoFocus
-            placeholder="Search images and photos"
+            placeholder="Search movies"
             name="name"
             value={formik.values.name}
             onChange={formik.handleChange}
