@@ -2,7 +2,7 @@ import * as Api from '../../service/Api.js';
 import * as data from '../../service/data.js';
 import { useParams, Outlet } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { Movie, Container, Link, Back, Picture } from './MoviesInfo.styled';
+import { Movie, Container, Link, Picture } from './MoviesInfo.styled';
 
 const MoviesInfo = () => {
   const { movieId } = useParams();
@@ -21,7 +21,6 @@ const MoviesInfo = () => {
 
   return (
     <Container>
-      <Back to="/"> &#8592; go to back</Back>
       <div>
         {movie.map(
           ({

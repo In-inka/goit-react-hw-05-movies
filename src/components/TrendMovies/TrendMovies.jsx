@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import * as Api from '../../service/Api.js';
+import Movies from '../Movies/Movies.jsx';
 
-import { Item, Link } from '../TrendMovies/TrendMovies.styled.jsx';
 const TrendMovies = () => {
   const [trendMovies, setTrendMovies] = useState([]);
 
@@ -16,13 +16,12 @@ const TrendMovies = () => {
   }, []);
 
   return (
-    <ul>
-      {trendMovies.map(({ id, original_title, original_name }) => (
-        <Item key={id}>
-          <Link to={`/movies/${id}`}>{original_title || original_name}</Link>
-        </Item>
-      ))}
-    </ul>
+    <>
+      <h2>Trending movies</h2>
+      <ul>
+        <Movies films={trendMovies} />
+      </ul>
+    </>
   );
 };
 

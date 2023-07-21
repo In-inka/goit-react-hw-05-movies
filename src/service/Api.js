@@ -9,7 +9,7 @@ axios.defaults.params = {
 axios.defaults.headers.common['accept'] = 'application/json';
 
 export const getTrendingFilm = async () => {
-  const { data } = await axios(`trending/all/day`);
+  const { data } = await axios(`trending/movie/day`);
 
   return data;
 };
@@ -28,6 +28,17 @@ export const getCast = async id => {
 
 export const geReviews = async id => {
   const { data } = await axios(`movie/${id}/reviews`);
+
+  return data;
+};
+
+export const geSearchMovies = async search => {
+  const params = {
+    params: {
+      query: search,
+    },
+  };
+  const { data } = await axios(`search/movie`, params);
 
   return data;
 };

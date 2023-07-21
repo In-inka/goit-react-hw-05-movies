@@ -1,7 +1,12 @@
 import React from 'react';
+import SearchMovies from 'components/SearchMovies/SearchMovies';
 
 const MoviesPage = () => {
-  return <div>..Hello.</div>;
+  return (
+    <>
+      <SearchMovies />
+    </>
+  );
 };
 
 export default MoviesPage;
