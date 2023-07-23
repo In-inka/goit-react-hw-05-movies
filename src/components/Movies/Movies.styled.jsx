@@ -6,6 +6,7 @@ export const Item = styled.li`
   max-width: 400px;
   padding: 5px;
   margin-bottom: 5px;
+  background-color: white;
   box-shadow: 0px 1px 6px rgba(24, 106, 112, 0.8),
     0px 1px 1px rgba(39, 63, 66, 0.16), 0px 2px 1px rgba(16, 93, 90, 0.16);
   border-radius: 4px;

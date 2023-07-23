@@ -1,7 +1,8 @@
+import * as Api from '../../service/Api.js';
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import * as Api from '../../service/Api.js';
 import { useEffect, useState } from 'react';
+
 import picture from '../../images/no-image.jpg';
 import { List, Item } from './Cast.styled.jsx';
 
@@ -10,19 +11,22 @@ const Cast = () => {
   const { movieId } = useParams();
 
   useEffect(() => {
-    Api.getCast(movieId)
+    castInfo(movieId);
+  }, [movieId]);
+
+  const castInfo = async id =>
+    await Api.getCast(id)
       .then(({ cast }) => {
-        console.log(cast);
         setNameCast([...cast]);
       })
       .catch(err => {
         console.log(err);
       });
-  }, [movieId]);
 
   console.log(cast);
   return (
     <div>
+      {cast.length === 0 && <div>Oppss...there is no information on this!</div>}
       <List>
         {cast.map(({ character, id, name, profile_path }) => (
           <Item key={id}>

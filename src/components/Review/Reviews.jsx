@@ -1,6 +1,7 @@
+import * as Api from '../../service/Api.js';
+
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import * as Api from '../../service/Api.js';
 import { useEffect, useState } from 'react';
 
 const Reviews = () => {
@@ -8,19 +9,22 @@ const Reviews = () => {
   const { movieId } = useParams();
 
   useEffect(() => {
-    Api.geReviews(movieId)
+    reviewsInfo(movieId);
+  }, [movieId]);
+
+  const reviewsInfo = async id =>
+    Api.geReviews(id)
       .then(({ results }) => {
-        console.log(results);
         setReviews([...results]);
       })
       .catch(err => {
         console.log(err);
       });
-  }, [movieId]);
-
-  console.log(rewiews);
   return (
     <div>
+      {rewiews.length === 0 && (
+        <div>Oppss...there is no information on this!</div>
+      )}
       <ul>
         {rewiews.map(({ id, author, content }) => (
           <li key={id}>

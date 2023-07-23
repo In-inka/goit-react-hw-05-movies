@@ -1,26 +1,45 @@
 import * as Api from '../../service/Api.js';
 import * as data from '../../service/data.js';
-import { useParams, Outlet } from 'react-router-dom';
-import { useEffect, useState } from 'react';
-import { Movie, Container, Link, Picture } from './MoviesInfo.styled';
+import { useParams, Outlet, useLocation } from 'react-router-dom';
+import { useEffect, useState, useRef } from 'react';
+import { Notify } from 'notiflix/build/notiflix-notify-aio';
+import {
+  Movie,
+  Container,
+  Link,
+  Picture,
+  LinkBack,
+  BackIcon,
+} from './MovieDetails.styled.jsx';
+import picture from '../../images/no-image.jpg';
 
-const MoviesInfo = () => {
+const MovieDetails = () => {
+  const location = useLocation();
+  const locationRef = useRef(location.state?.from ?? '/');
   const { movieId } = useParams();
   const [movie, setMovie] = useState([]);
+  const [error, setError] = useState('');
 
   useEffect(() => {
-    Api.getInfoFilm(movieId)
+    infoFilm(movieId);
+  }, [movieId]);
+
+  const infoFilm = async id =>
+    await Api.getInfoFilm(id)
       .then(result => {
-        console.log(result);
         setMovie([result]);
       })
       .catch(err => {
-        console.log(err);
+        setError(err);
       });
-  }, [movieId]);
-
   return (
     <Container>
+      <LinkBack to={locationRef.current}>
+        <BackIcon />
+        Go to back
+      </LinkBack>
+      {error &&
+        Notify.failure(`Ooopss....:( ${error})`, { position: 'center-top' })}
       <div>
         {movie.map(
           ({
@@ -33,11 +52,20 @@ const MoviesInfo = () => {
           }) => {
             return (
               <Movie key={movieId}>
-                <Picture
-                  src={`https://image.tmdb.org/t/p/w342${poster_path}`}
-                  alt={title}
-                  width="342"
-                />
+                {poster_path ? (
+                  <Picture
+                    src={`https://image.tmdb.org/t/p/w342${poster_path}`}
+                    alt={title}
+                    width="342"
+                  />
+                ) : (
+                  <Picture
+                    src={`${picture}`}
+                    alt={title}
+                    width="342"
+                    height="513"
+                  />
+                )}
                 <div>
                   <h2>
                     <b>
@@ -74,4 +102,4 @@ const MoviesInfo = () => {
   );
 };
 
-export default MoviesInfo;
+export default MovieDetails;

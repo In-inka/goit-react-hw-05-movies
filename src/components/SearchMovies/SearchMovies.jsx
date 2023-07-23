@@ -1,21 +1,24 @@
+import * as Api from '../../service/Api.js';
+
 import { useFormik } from 'formik';
-//import PropTypes from 'prop-types';
+import { useSearchParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Notify } from 'notiflix/build/notiflix-notify-aio';
+import { Loading } from 'notiflix/build/notiflix-loading-aio';
+
 import {
   SearchForm,
   Btn,
   Label,
   MyStyledInput,
   Container,
-  Item,
-  Link,
 } from './SearchMovies.styled';
-import { useEffect, useState } from 'react';
-import * as Api from '../../service/Api.js';
-import { useSearchParams } from 'react-router-dom';
-import { Toaster, toast } from 'react-hot-toast';
+
+import Movies from '../Movies';
 
 const SearchMovies = () => {
   const [filmList, setFilmList] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get('query') ?? '';
@@ -34,22 +37,33 @@ const SearchMovies = () => {
 
   useEffect(() => {
     if (query === '') {
-      toast.error('Please enter the name of the movie');
+      Notify.info('Please enter the name of the movie', {
+        position: 'center-top',
+      });
       return;
     }
+    setIsLoading(false);
+    Loading.dots({ backgroundColor: 'rgb(65, 88, 136, 0.2)' });
+    searchMovies(query);
+  }, [query]);
+
+  const searchMovies = async query =>
     Api.geSearchMovies(query)
       .then(({ results }) => {
         setFilmList([...results]);
       })
       .catch(error => {
         setError(error);
+      })
+      .finally(() => {
+        setIsLoading(true);
+        Loading.remove();
+        Notify.success('Successful', { position: 'center-top' });
       });
-  }, [query]);
 
   return (
     <>
       <Container>
-        <Toaster position="top-center" reverseOrder={false} />
         <SearchForm htmlFor="name" onSubmit={formik.handleSubmit}>
           <Btn type="submit">
             <Label>Search</Label>
@@ -65,13 +79,9 @@ const SearchMovies = () => {
           />
         </SearchForm>
       </Container>
-      <ul>
-        {filmList.map(({ id, original_title, original_name }) => (
-          <Item key={id}>
-            <Link to={`/movies/${id}`}>{original_title || original_name}</Link>
-          </Item>
-        ))}
-      </ul>
+      {error &&
+        Notify.failure(`Ooopss....:( ${error})`, { position: 'center-top' })}
+      <ul>{isLoading && <Movies films={filmList} />}</ul>
     </>
   );
 };
