@@ -12,7 +12,6 @@ export const Head = styled.header`
   padding-top: 12px;
   padding-bottom: 12px;
   color: #fff;
-  background: rgb(65, 88, 136);
   background: linear-gradient(
     90deg,
     rgba(65, 88, 136, 1) 0%,
