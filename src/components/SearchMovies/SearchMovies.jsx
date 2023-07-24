@@ -36,6 +36,19 @@ const SearchMovies = () => {
   });
 
   useEffect(() => {
+      const searchMovies = async query => {
+        try {
+          const { results } = await Api.geSearchMovies(query);
+          setFilmList([...results]);
+          if (results.length === 0) return;
+          Notify.success('Successful', { position: 'center-top' });
+        } catch (error) {
+          setError(error);
+        } finally {
+          setIsLoading(true);
+          Loading.remove();
+        }
+      };
     !query && setSearchParams({});
     if (query === '') {
       Notify.info('Please enter the name of the movie', {
@@ -47,19 +60,7 @@ const SearchMovies = () => {
     searchMovies(query);
   }, [query, setSearchParams]);
 
-  const searchMovies = async query => {
-    try {
-      const { results } = await Api.geSearchMovies(query);
-      setFilmList([...results]);
-      if (results.length === 0) return;
-      Notify.success('Successful', { position: 'center-top' });
-    } catch (error) {
-      setError(error);
-    } finally {
-      setIsLoading(true);
-      Loading.remove();
-    }
-  };
+
 
   return (
     <>

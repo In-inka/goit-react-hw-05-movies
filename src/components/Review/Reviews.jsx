@@ -9,17 +9,17 @@ const Reviews = () => {
   const { movieId } = useParams();
 
   useEffect(() => {
+    const reviewsInfo = async id => {
+      try {
+        const { results } = await Api.geReviews(id);
+        setReviews([...results]);
+      } catch (error) {
+        console.log(error);
+      }
+    };
     reviewsInfo(movieId);
   }, [movieId]);
 
-  const reviewsInfo = async id => {
-    try {
-      const { results } = await Api.geReviews(id);
-      setReviews([...results]);
-    } catch (error) {
-      console.log(error);
-    }
-  };
   return (
     <div>
       {rewiews.length === 0 && (

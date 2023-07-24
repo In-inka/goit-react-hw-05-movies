@@ -23,17 +23,16 @@ const MovieDetails = () => {
   const [error, setError] = useState('');
 
   useEffect(() => {
+    const infoFilm = async id => {
+      try {
+        const results = await Api.getInfoFilm(id);
+        setMovie([results]);
+      } catch (error) {
+        setError(error);
+      }
+    };
     infoFilm(movieId);
   }, [movieId]);
-
-  const infoFilm = async id => {
-    try {
-      const results = await Api.getInfoFilm(id);
-      setMovie([results]);
-    } catch (error) {
-      setError(error);
-    }
-  };
 
   return (
     <Container>

@@ -11,17 +11,17 @@ const Cast = () => {
   const { movieId } = useParams();
 
   useEffect(() => {
+    const castInfo = async id => {
+      try {
+        const { cast } = await Api.getCast(id);
+        setNameCast([...cast]);
+      } catch (error) {
+        console.log(error);
+      }
+    };
     castInfo(movieId);
   }, [movieId]);
 
-  const castInfo = async id => {
-    try {
-      const { cast } = await Api.getCast(id);
-      setNameCast([...cast]);
-    } catch (error) {
-      console.log(error);
-    }
-  };
   return (
     <div>
       {cast.length === 0 && <div>Oppss...there is no information on this!</div>}
