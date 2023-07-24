@@ -11,14 +11,17 @@ const TrendMovies = () => {
   const [error, setError] = useState('');
 
   useEffect(() => {
-    Api.getTrendingFilm()
-      .then(({ results }) => {
-        setTrendMovies([...results]);
-      })
-      .catch(err => {
-        setError(err);
-      });
+    trendingFilm();
   }, []);
+
+  const trendingFilm = async () => {
+    try {
+      const { results } = await Api.getTrendingFilm();
+      setTrendMovies([...results]);
+    } catch (error) {
+      setError(error);
+    }
+  };
 
   return (
     <Trend>

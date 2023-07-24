@@ -3,6 +3,8 @@ import * as data from '../../service/data.js';
 import { useParams, Outlet, useLocation } from 'react-router-dom';
 import { useEffect, useState, useRef } from 'react';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
+import { Suspense } from 'react';
+import { ThreeDots } from 'react-loader-spinner';
 import {
   Movie,
   Container,
@@ -24,14 +26,15 @@ const MovieDetails = () => {
     infoFilm(movieId);
   }, [movieId]);
 
-  const infoFilm = async id =>
-    await Api.getInfoFilm(id)
-      .then(result => {
-        setMovie([result]);
-      })
-      .catch(err => {
-        setError(err);
-      });
+  const infoFilm = async id => {
+    try {
+      const results = await Api.getInfoFilm(id);
+      setMovie([results]);
+    } catch (error) {
+      setError(error);
+    }
+  };
+
   return (
     <Container>
       <LinkBack to={locationRef.current}>
@@ -97,7 +100,9 @@ const MovieDetails = () => {
           <Link to="reviews">Reviews</Link>
         </li>
       </ul>
-      <Outlet />
+      <Suspense fallback={<ThreeDots color="rgba(65, 88, 136, 1)" />}>
+        <Outlet />
+      </Suspense>
     </Container>
   );
 };

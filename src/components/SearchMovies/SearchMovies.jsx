@@ -36,30 +36,30 @@ const SearchMovies = () => {
   });
 
   useEffect(() => {
+    !query && setSearchParams({});
     if (query === '') {
       Notify.info('Please enter the name of the movie', {
         position: 'center-top',
       });
       return;
     }
-    setIsLoading(false);
     Loading.dots({ backgroundColor: 'rgb(65, 88, 136, 0.2)' });
     searchMovies(query);
-  }, [query]);
+  }, [query, setSearchParams]);
 
-  const searchMovies = async query =>
-    Api.geSearchMovies(query)
-      .then(({ results }) => {
-        setFilmList([...results]);
-      })
-      .catch(error => {
-        setError(error);
-      })
-      .finally(() => {
-        setIsLoading(true);
-        Loading.remove();
-        Notify.success('Successful', { position: 'center-top' });
-      });
+  const searchMovies = async query => {
+    try {
+      const { results } = await Api.geSearchMovies(query);
+      setFilmList([...results]);
+      if (results.length === 0) return;
+      Notify.success('Successful', { position: 'center-top' });
+    } catch (error) {
+      setError(error);
+    } finally {
+      setIsLoading(true);
+      Loading.remove();
+    }
+  };
 
   return (
     <>

@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { NavLink } from 'react-router-dom';
-
+//if (!results) return;
 export const Head = styled.header`
   top: 0;
   left: 0;

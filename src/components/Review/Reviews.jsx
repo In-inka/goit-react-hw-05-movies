@@ -12,14 +12,14 @@ const Reviews = () => {
     reviewsInfo(movieId);
   }, [movieId]);
 
-  const reviewsInfo = async id =>
-    Api.geReviews(id)
-      .then(({ results }) => {
-        setReviews([...results]);
-      })
-      .catch(err => {
-        console.log(err);
-      });
+  const reviewsInfo = async id => {
+    try {
+      const { results } = await Api.geReviews(id);
+      setReviews([...results]);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <div>
       {rewiews.length === 0 && (
